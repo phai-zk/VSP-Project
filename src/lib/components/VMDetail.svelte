@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { type VM } from "$lib/VM/getAllVM";
-    import { onMount } from "svelte";
+	import { onMount } from "svelte";
 	export let selectedVM: VM;
 	export let closeModel = () => {};
 	export let toggleVM = (vm: VM, toggleLoading: (i: boolean) => void) => {};
@@ -78,6 +78,7 @@
 		<div class="model-body">
 			<div class="model-vm-name">{selectedVM.distro}</div>
 			<div class="model-info">IP: {selectedVM.ip}</div>
+			<div class="model-info">port: {selectedVM.port}</div>
 			<div class="model-info">status: {selectedVM.status}</div>
 			<div class="model-info">Ram: {selectedVM.ram} MB</div>
 			<div class="model-info">

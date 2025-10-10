@@ -1,7 +1,17 @@
 <script lang="ts">
 	import { onMount } from "svelte";
-	import { getAllVM, type VM, type VMResponse} from "../lib/VM/getAllVM";
-	import { start_vm, stop_vm, delete_vm, create_vm} from "../lib/VM/vmController"
+	import {
+		getAllVM,
+		type VM,
+		type VM_Create,
+		type VMResponse,
+	} from "../lib/VM/getAllVM";
+	import {
+		start_vm,
+		stop_vm,
+		delete_vm,
+		create_vm,
+	} from "../lib/VM/vmController";
 	import CreateVM from "../lib/components/CreateVM.svelte";
 	import VMRow from "../lib/components/VMItem.svelte";
 	import VMDetail from "../lib/components/VMDetail.svelte";
@@ -29,15 +39,13 @@
 	async function toggleVM(vm: VM, toggleLoading: (i: boolean) => void) {
 		toggleLoading(true);
 		let res;
-		if (vm.status === "running")
-			res = await stop_vm(vm.vmname);
-		else
-			res = await start_vm(vm.vmname);
+		if (vm.status === "running") res = await stop_vm(vm.vmname);
+		else res = await start_vm(vm.vmname);
 
 		if (!res.status) {
-			alert(res?.stdout)
+			alert(res?.stdout);
 			toggleLoading(false);
-			return ;
+			return;
 		}
 
 		vms = vms.map((v) =>
@@ -50,17 +58,27 @@
 
 	async function deleteVM(vmname: string) {
 		if (confirm("คุณต้องการลบ VM" + vmname + " หรือไม่?")) {
-			let res = await delete_vm(vmname)
-			if (!res.status)
-				alert(res.stdout)
+			console.log("Remove ...");
+
+			let res = await delete_vm(vmname);
+			if (!res.status) {
+				alert(res.stdout);
+				return;
+			}
 			console.log(res);
 			vms = vms.filter((v) => v.vmname !== vmname);
 		}
 	}
 
-	function updateData(newVM: VM) {
-
-		vms = [...vms, newVM]
+	async function updateData(newVM: VM, createVM: VM_Create) {
+		console.log("Create ...");
+		let res = await create_vm(createVM);
+		if (!res.status) {
+			alert(res.stdout);
+			return;
+		}
+		console.log(res);
+		vms = [...vms, newVM];
 	}
 </script>
 

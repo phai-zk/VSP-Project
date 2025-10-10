@@ -27,14 +27,17 @@
 	}
 
 	function validType() {
-		const { port, disk, ram, swap } = formData;
+		const { port, disk, ram } = formData;
+		let isSamePort = false;
 		vms.forEach((v) => {
 			if (v.port == Number(port)) {
 				alert("port " + port + " ไม่ว่าง");
-				return false;
+				isSamePort = true;
+				return ;
 			}
 		});
-
+		if (isSamePort)
+			return false;
 		if (isNaN(port) || Number(port) < 9000) {
 			alert("กรุณากรอก port เป็นตัวเลขที่มากกว่า 9000");
 			return false;
@@ -76,11 +79,11 @@
 
 	// Functions
 	function createVM() {
-		if (!validInp()) return;
+		if (!validInp()) return ;
 
-		if (!validType()) return;
+		if (!validType()) return ;
 
-		if (!validName(formData.vmname)) return;
+		if (!validName(formData.vmname)) return ;
 
 		const newVM: VM = getNewVM();
 
@@ -104,7 +107,6 @@
 			disk: "",
 			ram: "",
 			password: "",
-			swap: "",
 		};
 	}
 </script>
@@ -141,6 +143,13 @@
 			placeholder="password for root"
 			bind:value={formData.password}
 			class="input-field password-field"
+		/>
+		<input
+			type="number"
+			min={9000}
+			placeholder="port"
+			bind:value={formData.port}
+			class="input-field"
 		/>
 		<div class="button-cell">
 			<button class="create-btn" on:click={createVM}>create</button>

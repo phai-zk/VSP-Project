@@ -1,13 +1,24 @@
 import { json } from '@sveltejs/kit';
-import { type VMResponse, type VM } from "./getAllVM"
+import { type VM_Create, type VM } from "./getAllVM"
 import { URL } from "./baseURL"
 
-export async function create_vm(vm: VMResponse) {
-	const res = await fetch(`${URL}/all-vm/`);
+export async function create_vm(vm: VM_Create) {
+	const res = await fetch(`${URL}/create-vm/`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			"Authorization": "Bearer your_token_here"
+		},
+		body: JSON.stringify({ ...vm })
+	});
+
+	console.log("Create Log ");
+
 	if (!res.ok) {
 		throw new Error('Failed to fetch VM data');
 	}
 	const data = await res.json();
+	console.log(data);
 	return data;
 }
 
