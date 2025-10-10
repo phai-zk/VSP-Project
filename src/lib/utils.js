@@ -1,4 +1,6 @@
 export function getIconForDistro(distro) {
+    console.log(distro);
+
     const name = distro.toLowerCase();
     if (name.includes("ubuntu"))
         return "https://assets.ubuntu.com/v1/49a1a858-favicon-32x32.png";

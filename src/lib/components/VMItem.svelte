@@ -1,16 +1,27 @@
-<script>
-	export let vm = {};
-	// Model state
-	export let showVMDetails = (v) => {};
-	export let toggleVM = (vm) => {};
-	export let deleteVM = (vmId) => {};
+<script lang="ts">
+	import "../VM/vmController";
+	import { type VM } from "$lib/VM/getAllVM";
+	import StartBTN from "./icon/StartBTN.svelte";
+	import StopBTN from "./icon/StopBTN.svelte";
+	import Info from "./icon/Info.svelte";
+	import Trash from "./icon/Trash.svelte";
+	import Loading from "./icon/Loading.svelte";
 
+	export let vm: VM;
+	export let showVMDetails = (vm: VM) => {};
+	export let toggleVM = (vm: VM, toggleLoading: (i: boolean) => void) => {};
+	export let deleteVM = (vm: string) => {};
+
+	let loading: boolean = false
+	function setLoading(isload: boolean) {
+		loading = isload;
+	}
 </script>
 
 <div class="vm-row data-row">
 	<div class="vm-icon-cell">
 		<div class="vm-icon">
-			<img src={vm.icon} alt={vm.distribute} class="vm-logo" />
+			<img src={vm.icon} alt={vm.distro} class="vm-logo" />
 		</div>
 	</div>
 	<div class="vm-name-cell">{vm.name}</div>
@@ -24,49 +35,17 @@
 	<div class="vm-actions-cell">
 		<button
 			class="action-btn play-btn"
-			on:pointerup={() => toggleVM(vm)}
+			on:pointerup={() => {
+				if (!loading) toggleVM(vm, setLoading);
+			}}
 			title={vm.status === "running" ? "Stop" : "Start"}
 		>
-			{#if vm.status === "stop"}
-				<svg
-					width="16"
-					height="16"
-					viewBox="0 0 16 16"
-					fill="currentColor"
-				>
-					<circle
-						cx="8"
-						cy="8"
-						r="7"
-						stroke="currentColor"
-						fill="none"
-						stroke-width="1.5"
-					/>
-					<path d="M6 5 L11 8 L6 11 Z" fill="currentColor" />
-				</svg>
+			{#if loading}
+				<Loading size={16} />
+			{:else if vm.status === "stop"}
+				<StopBTN w={16} h={16} />
 			{:else}
-				<svg
-					width="16"
-					height="16"
-					viewBox="0 0 16 16"
-					fill="currentColor"
-				>
-					<circle
-						cx="8"
-						cy="8"
-						r="7"
-						stroke="currentColor"
-						fill="none"
-						stroke-width="1.5"
-					/>
-					<rect
-						x="5"
-						y="5"
-						width="6"
-						height="6"
-						fill="currentColor"
-					/>
-				</svg>
+				<StartBTN w={16} h={16} />
 			{/if}
 		</button>
 		<button
@@ -74,34 +53,14 @@
 			on:pointerup={() => showVMDetails(vm)}
 			title="Info"
 		>
-			<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-				<circle
-					cx="8"
-					cy="8"
-					r="7"
-					stroke="currentColor"
-					stroke-width="1.5"
-				/>
-				<text
-					x="8"
-					y="12"
-					text-anchor="middle"
-					fill="currentColor"
-					font-size="10"
-					font-weight="bold">i</text
-				>
-			</svg>
+			<Info w={16} h={16} />
 		</button>
 		<button
 			class="action-btn delete-btn"
-			on:pointerup={() => deleteVM(vm.id)}
+			on:pointerup={() => deleteVM(vm.vmname)}
 			title="Delete"
 		>
-			<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-				<path
-					d="M5 3V2h6v1h3v1H2V3h3zm1 2h4v8H6V5zm-1 9h6a1 1 0 001-1V5H4v8a1 1 0 001 1z"
-				/>
-			</svg>
+			<Trash w={16} h={16} />
 		</button>
 	</div>
 </div>

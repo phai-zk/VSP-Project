@@ -1,0 +1,69 @@
+import { json } from '@sveltejs/kit';
+import { type VMResponse, type VM } from "./getAllVM"
+import { URL } from "./baseURL"
+
+export async function create_vm(vm: VMResponse) {
+	const res = await fetch(`${URL}/all-vm/`);
+	if (!res.ok) {
+		throw new Error('Failed to fetch VM data');
+	}
+	const data = await res.json();
+	return data;
+}
+
+export async function start_vm(vm: string) {
+	const res = await fetch(`${URL}/start-vm/`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			"Authorization": "Bearer your_token_here"
+		},
+		body: JSON.stringify({ vmname: vm })
+	});
+
+	if (!res.ok) {
+		throw new Error('Failed to fetch VM data');
+	}
+	const data = await res.json();
+	console.log(data);
+	return data;
+}
+
+export async function stop_vm(vm: string) {
+	console.log("Stop");
+
+	const res = await fetch(`${URL}/stop-vm/`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			"Authorization": "Bearer your_token_here"
+		},
+		body: JSON.stringify({ vmname: vm })
+	});
+
+	if (!res.ok) {
+		throw new Error('Failed to fetch VM data');
+	}
+	const data = await res.json();
+	console.log(data);
+	return data;
+}
+
+export async function delete_vm(vm: string) {
+	const res = await fetch(`${URL}/remove-vm/`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			"Authorization": "Bearer your_token_here"
+		},
+		body: JSON.stringify({ vmname: vm })
+	});
+
+	if (!res.ok) {
+		throw new Error('Failed to fetch VM data');
+	}
+	const data = await res.json();
+	console.log(data);
+
+	return data;
+}

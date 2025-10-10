@@ -1,22 +1,29 @@
-<script>
-	export let selectedVM = {};
+<script lang="ts">
+	import { type VM } from "$lib/VM/getAllVM";
+    import { onMount } from "svelte";
+	export let selectedVM: VM;
 	export let closeModel = () => {};
-	export let toggleVM = (vm) => {};
-	console.log("HII");
+	export let toggleVM = (vm: VM, toggleLoading: (i: boolean) => void) => {};
 
 	function startVMFromModel() {
-		toggleVM(selectedVM);
+		toggleVM(selectedVM, setLoading);
 		closeModel();
+	}
+
+	let loading = false;
+	function setLoading(isload: boolean) {
+		loading = isload;
 	}
 </script>
 
 <div class="model-overlay" on:pointerup={closeModel}>
-	<div class="model" on:pointerup={stopPropagation}>
+	<div class="model">
+		<!-- on:pointerup={stopPropagation} -->
 		<div class="model-header">
 			<div class="model-icon">
 				<img
 					src={selectedVM.icon}
-					alt={selectedVM.distribute}
+					alt={selectedVM.distro}
 					class="vm-logo"
 				/>
 			</div>
@@ -63,17 +70,19 @@
 						/>
 					</svg>
 				{/if}
-				<span>{selectedVM.status === "running" ? "stop" : "start"}</span>
+				<span>{selectedVM.status === "running" ? "stop" : "start"}</span
+				>
 			</button>
 		</div>
 
 		<div class="model-body">
-			<div class="model-vm-name">{selectedVM.distribute}</div>
+			<div class="model-vm-name">{selectedVM.distro}</div>
 			<div class="model-info">IP: {selectedVM.ip}</div>
 			<div class="model-info">status: {selectedVM.status}</div>
 			<div class="model-info">Ram: {selectedVM.ram} MB</div>
 			<div class="model-info">
-				Disk: {selectedVM.disk} GB (free {selectedVM.disk} GB)
+				Disk: {selectedVM.disk} GB
+				<!-- (free {selectedVM.disk} GB) -->
 			</div>
 		</div>
 

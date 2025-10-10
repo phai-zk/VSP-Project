@@ -1,50 +1,17 @@
-<script>
+<script lang="ts">
 	import { onMount } from "svelte";
+	import { getAllVM, type VM, type VMResponse} from "../lib/VM/getAllVM";
+	import { start_vm, stop_vm, delete_vm, create_vm} from "../lib/VM/vmController"
 	import CreateVM from "../lib/components/CreateVM.svelte";
 	import VMRow from "../lib/components/VMItem.svelte";
 	import VMDetail from "../lib/components/VMDetail.svelte";
-	import { getIconForDistro } from "../lib/utils.js";
 	import "../lib/css/global.css";
 
-	let vms = [];
+	let vms: VM[] = [];
 	onMount(async () => {
-		vms = await loadData();
+		vms = await getAllVM();
 		console.log(vms);
 	});
-	async function loadData() {
-		return [
-			{
-				id: 1,
-				name: "SuperLinux",
-				ip: "133.333.333.333",
-				status: "running",
-				ram: 4096,
-				disk: 50,
-				distribute: "Debian",
-				icon: getIconForDistro("Debian"),
-			},
-			{
-				id: 2,
-				name: "Katihaha",
-				ip: "133.333.222.332",
-				status: "stop",
-				ram: 2048,
-				disk: 30,
-				distribute: "Ubuntu",
-				icon: getIconForDistro("Ubuntu"),
-			},
-			{
-				id: 3,
-				name: "GGOS",
-				ip: "4.23.5.12",
-				status: "stop",
-				ram: 1024,
-				disk: 20,
-				distribute: "CentOS",
-				icon: getIconForDistro("CentOS"),
-			},
-		];
-	}
 
 	let showModel = false;
 	let selectedVM = null;
@@ -57,32 +24,49 @@
 	function showVMDetails(vm) {
 		selectedVM = vm;
 		showModel = true;
-		console.log(vm + "\n" + showModel);
 	}
 
-	function toggleVM(vm) {
+	async function toggleVM(vm: VM, toggleLoading: (i: boolean) => void) {
+		toggleLoading(true);
+		let res;
+		if (vm.status === "running")
+			res = await stop_vm(vm.vmname);
+		else
+			res = await start_vm(vm.vmname);
+
+		if (!res.status) {
+			alert(res?.stdout)
+			toggleLoading(false);
+			return ;
+		}
+
 		vms = vms.map((v) =>
-			(v.id === vm.id)
+			v.vmname === vm.vmname
 				? { ...v, status: v.status === "running" ? "stop" : "running" }
 				: v,
 		);
+		toggleLoading(false);
 	}
 
-	function deleteVM(vmId) {
-		if (confirm("คุณต้องการลบ VM นี้หรือไม่?")) {
-			vms = vms.filter((v) => v.id !== vmId);
+	async function deleteVM(vmname: string) {
+		if (confirm("คุณต้องการลบ VM" + vmname + " หรือไม่?")) {
+			let res = await delete_vm(vmname)
+			if (!res.status)
+				alert(res.stdout)
+			console.log(res);
+			vms = vms.filter((v) => v.vmname !== vmname);
 		}
 	}
 
-	function updateData(newVM) {
-		vms = [...vms, newVM];
+	function updateData(newVM: VM) {
+
+		vms = [...vms, newVM]
 	}
-	console.log(vms);
 </script>
 
 <div class="app">
 	<div class="container">
-		<CreateVM {updateData} />
+		<CreateVM {vms} {updateData} />
 		<!-- VM List -->
 		<div class="vm-row header-row">
 			<div class="vm-icon-cell"></div>
@@ -91,8 +75,8 @@
 			<div class="vm-status-cell">Status</div>
 			<div class="vm-actions-cell">Actions</div>
 		</div>
-		{#each vms as vm (vm.id)}
-			<VMRow {vm} {showModel} {showVMDetails} {toggleVM} {deleteVM} />
+		{#each vms as vm (vm.vmname)}
+			<VMRow {vm} {showVMDetails} {toggleVM} {deleteVM} />
 		{/each}
 	</div>
 </div>

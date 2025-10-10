@@ -229,6 +229,7 @@
 }
 
 .model {
+    position: absolute;
     background: #e8e8e8;
     border-radius: 8px;
     padding: 24px;
