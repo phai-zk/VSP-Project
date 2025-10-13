@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { getIconForDistro } from "../utils.js";
-	import { type VM, type Log, type VM_Create } from "../VM/getAllVM.js";
+	import { getIconForDistro } from "$lib/utils.js";
+	import { type VM, type Log, type VM_Create } from "$lib/VM/utill";
 	let formData: any = {
 		distro: "",
 		vmname: "",
@@ -112,9 +112,9 @@
 </script>
 
 <!-- Create VM Form -->
-<div class="create-vm-section">
+<div class="create-vm-section w-full">
 	<div class="form-title">create VM</div>
-	<div class="form-grid">
+	<div class="grid grid-cols-2 gap-2">
 		<input
 			type="text"
 			placeholder="name"

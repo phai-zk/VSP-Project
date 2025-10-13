@@ -1,19 +1,19 @@
 <script lang="ts">
-	import { type VM } from "$lib/VM/getAllVM";
+	import { type VM } from "$lib/VM/utill";
+	import Loading from "./icon/Loading.svelte";
 	import { onMount } from "svelte";
+    import StartBTN from "./icon/StartBTN.svelte";
+    import StopBTN from "./icon/StopBTN.svelte";
 	export let selectedVM: VM;
 	export let closeModel = () => {};
-	export let toggleVM = (vm: VM, toggleLoading: (i: boolean) => void) => {};
+	export let toggleVM = (vm: VM) => {};
 
 	function startVMFromModel() {
-		toggleVM(selectedVM, setLoading);
+		toggleVM(selectedVM);
 		closeModel();
 	}
 
-	let loading = false;
-	function setLoading(isload: boolean) {
-		loading = isload;
-	}
+	export let loading = false;
 </script>
 
 <div class="model-overlay" on:pointerup={closeModel}>
@@ -29,46 +29,12 @@
 			</div>
 			<span class="model-title">{selectedVM.name}</span>
 			<button class="model-start-btn" on:pointerup={startVMFromModel}>
-				{#if selectedVM.status === "stop"}
-					<svg
-						width="16"
-						height="16"
-						viewBox="0 0 16 16"
-						fill="currentColor"
-					>
-						<circle
-							cx="8"
-							cy="8"
-							r="7"
-							stroke="currentColor"
-							fill="none"
-							stroke-width="1.5"
-						/>
-						<path d="M6 5 L11 8 L6 11 Z" fill="currentColor" />
-					</svg>
+				{#if loading}
+					<Loading size={16} />
+				{:else if selectedVM.status === "stop"}
+					<StopBTN w={16} h={16} />
 				{:else}
-					<svg
-						width="16"
-						height="16"
-						viewBox="0 0 16 16"
-						fill="currentColor"
-					>
-						<circle
-							cx="8"
-							cy="8"
-							r="7"
-							stroke="currentColor"
-							fill="none"
-							stroke-width="1.5"
-						/>
-						<rect
-							x="5"
-							y="5"
-							width="6"
-							height="6"
-							fill="currentColor"
-						/>
-					</svg>
+					<StartBTN w={16} h={16} />
 				{/if}
 				<span>{selectedVM.status === "running" ? "stop" : "start"}</span
 				>

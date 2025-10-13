@@ -1,21 +1,17 @@
 <script lang="ts">
 	import { onMount } from "svelte";
-	import {
-		getAllVM,
-		type VM,
-		type VM_Create,
-		type VMResponse,
-	} from "../lib/VM/getAllVM";
+	import { type VM, type VM_Create, type VMResponse } from "$lib/VM/utill";
+	import { getAllVM } from "$lib/VM/getAllVM";
 	import {
 		start_vm,
 		stop_vm,
 		delete_vm,
 		create_vm,
-	} from "../lib/VM/vmController";
-	import CreateVM from "../lib/components/CreateVM.svelte";
-	import VMRow from "../lib/components/VMItem.svelte";
-	import VMDetail from "../lib/components/VMDetail.svelte";
-	import "../lib/css/global.css";
+	} from "$lib/VM/vmController";
+	import CreateVM from "$lib/components/CreateVM.svelte";
+	import VMRow from "$lib/components/VMItem.svelte";
+	import VMDetail from "$lib/components/VMDetail.svelte";
+	import "$lib/css/global.css";
 
 	let vms: VM[] = [];
 	onMount(async () => {
@@ -25,6 +21,7 @@
 
 	let showModel = false;
 	let selectedVM = null;
+	let loading = false;
 
 	function closeModel() {
 		showModel = false;
@@ -36,7 +33,11 @@
 		showModel = true;
 	}
 
-	async function toggleVM(vm: VM, toggleLoading: (i: boolean) => void) {
+	function toggleLoading(b :boolean) {
+		loading = b;
+	}
+
+	async function toggleVM(vm: VM) {
 		toggleLoading(true);
 		let res;
 		if (vm.status === "running") res = await stop_vm(vm.vmname);
@@ -89,17 +90,17 @@
 		<div class="vm-row header-row">
 			<div class="vm-icon-cell"></div>
 			<div class="vm-name-cell">VM name</div>
-			<div class="vm-ip-cell">IP</div>
+			<div class="vm-ip-cell sm:flex hidden">IP</div>
 			<div class="vm-status-cell">Status</div>
 			<div class="vm-actions-cell">Actions</div>
 		</div>
 		{#each vms as vm (vm.vmname)}
-			<VMRow {vm} {showVMDetails} {toggleVM} {deleteVM} />
+			<VMRow {vm} {loading} {showVMDetails} {toggleVM} {deleteVM} />
 		{/each}
 	</div>
 </div>
 
 <!-- Model -->
 {#if showModel && selectedVM}
-	<VMDetail {selectedVM} {closeModel} {toggleVM} />
+	<VMDetail {selectedVM} {loading} {closeModel} {toggleVM} />
 {/if}

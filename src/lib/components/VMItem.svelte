@@ -1,6 +1,6 @@
 <script lang="ts">
 	import "../VM/vmController";
-	import { type VM } from "$lib/VM/getAllVM";
+	import { type VM } from "$lib/VM/utill";
 	import StartBTN from "./icon/StartBTN.svelte";
 	import StopBTN from "./icon/StopBTN.svelte";
 	import Info from "./icon/Info.svelte";
@@ -9,13 +9,10 @@
 
 	export let vm: VM;
 	export let showVMDetails = (vm: VM) => {};
-	export let toggleVM = (vm: VM, toggleLoading: (i: boolean) => void) => {};
+	export let toggleVM = (vm: VM) => {};
 	export let deleteVM = (vm: string) => {};
 
-	let loading: boolean = false
-	function setLoading(isload: boolean) {
-		loading = isload;
-	}
+	export let loading: boolean;
 </script>
 
 <div class="vm-row data-row">
@@ -25,18 +22,18 @@
 		</div>
 	</div>
 	<div class="vm-name-cell">{vm.name}</div>
-	<div class="vm-ip-cell">{vm.ip}</div>
+	<div class="vm-ip-cell sm:flex hidden">{vm.ip}</div>
 	<div class="vm-status-cell">
 		<div class="status-indicator {vm.status}">
-			<div class="status-dot"></div>
-			<span class="status-text">{vm.status}</span>
+			<div class="status-dot "></div>
+			<span class="status-text sm:flex hidden">{vm.status}</span>
 		</div>
 	</div>
 	<div class="vm-actions-cell">
 		<button
 			class="action-btn play-btn"
 			on:pointerup={() => {
-				if (!loading) toggleVM(vm, setLoading);
+				if (!loading) toggleVM(vm);
 			}}
 			title={vm.status === "running" ? "Stop" : "Start"}
 		>

@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
-import { type VM_Create, type VM } from "./getAllVM"
-import { URL } from "./baseURL"
+import { type VM_Create, type VM } from "./utill"
+import { URL } from "./utill"
 
 export async function create_vm(vm: VM_Create) {
 	const res = await fetch(`${URL}/create-vm/`, {

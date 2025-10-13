@@ -1,44 +1,8 @@
 import { json } from '@sveltejs/kit';
-import { getIconForDistro } from "../utils.js";
-import { URL } from './baseURL.js';
+import { getIconForDistro } from "../utils";
+import { URL, type VM, type VMResponse,  } from './utill';
 
-export interface VMResponse {
-	vmname: string;
-	log: Log;
-}
 
-export interface Log {
-	distro: string;
-	vmname: string;
-	name: string;
-	ip: string;
-	port: number;
-	disk: number;
-	ram: number;
-	status: string;
-}
-
-export interface VM {
-	distro: string;
-	vmname: string;
-	name: string;
-	ip: string;
-	port: number;
-	disk: number;
-	ram: number;
-	status: string;
-	icon: string;
-}
-
-export interface VM_Create {
-	distro: string;
-	vmname: string;
-	user: string;
-	port: number;
-	disk: number;
-	ram: number;
-	password: string;
-}
 
 export async function getAllVM(): Promise<VM[]> {
 	const res = await fetch(`${URL}/all-vm/`);
