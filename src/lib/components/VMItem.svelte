@@ -8,6 +8,7 @@
 	import Loading from "./icon/Loading.svelte";
 
 	export let vm: VM;
+	export let selectedVM: VM | null;
 	export let showVMDetails = (vm: VM) => {};
 	export let toggleVM = (vm: VM) => {};
 	export let deleteVM = (vm: string) => {};
@@ -33,11 +34,12 @@
 		<button
 			class="action-btn play-btn"
 			on:pointerup={() => {
+				selectedVM === vm;
 				if (!loading) toggleVM(vm);
 			}}
 			title={vm.status === "running" ? "Stop" : "Start"}
 		>
-			{#if loading}
+			{#if loading && selectedVM === vm}
 				<Loading size={16} />
 			{:else if vm.status === "stop"}
 				<StopBTN w={16} h={16} />

@@ -95,7 +95,7 @@
 			<div class="vm-actions-cell">Actions</div>
 		</div>
 		{#each vms as vm (vm.vmname)}
-			<VMRow {vm} {loading} {showVMDetails} {toggleVM} {deleteVM} />
+			<VMRow {vm} {loading} {selectedVM} {showVMDetails} {toggleVM} {deleteVM} />
 		{/each}
 	</div>
 </div>

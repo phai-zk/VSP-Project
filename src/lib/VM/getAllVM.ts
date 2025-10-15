@@ -23,7 +23,7 @@ function normalizeData(data: VMResponse[]): VM[] {
 		info.push({
 			...d,
 			icon: getIconForDistro(d.distro),
-			ip: d.ip ?? "0.0.0.0",
+			ip: d.ip ?? "174.138.19.115",
 		} as VM)
 	})
 	return info;
