@@ -78,3 +78,24 @@ export async function delete_vm(vm: string) {
 
 	return data;
 }
+
+export async function reboot_vm(vm: string) {
+	console.log("Reboot");
+
+	const res = await fetch(`${URL}/reboot-vm/`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			"Authorization": "Bearer your_token_here"
+		},
+		body: JSON.stringify({ vmname: vm })
+	});
+
+	if (!res.ok) {
+		throw new Error('Failed to fetch VM data');
+	}
+	const data = await res.json();
+	console.log(data);
+
+	return data;
+}

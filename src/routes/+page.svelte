@@ -7,6 +7,7 @@
 		stop_vm,
 		delete_vm,
 		create_vm,
+		reboot_vm
 	} from "$lib/VM/vmController";
 	import CreateVM from "$lib/components/CreateVM.svelte";
 	import VMRow from "$lib/components/VMItem.svelte";
@@ -33,7 +34,7 @@
 		showModel = true;
 	}
 
-	function toggleLoading(b :boolean) {
+	function toggleLoading(b: boolean) {
 		loading = b;
 	}
 
@@ -71,6 +72,22 @@
 		}
 	}
 
+	async function rebootVM(vm: VM) {
+		console.log("Reboot ...");
+		vms = vms.map((v) =>
+			v.vmname === vm.vmname ? { ...v, status: "reboot" } : v,
+		);
+		let res = await reboot_vm(vm.vmname);
+		if (!res.status) {
+			alert(res.stdout);
+			return;
+		}
+		console.log(res);
+		vms = vms.map((v) =>
+			v.vmname === vm.vmname ? { ...v, status: "running" } : v,
+		);
+	}
+
 	async function updateData(newVM: VM, createVM: VM_Create) {
 		console.log("Create ...");
 		let res = await create_vm(createVM);
@@ -95,7 +112,15 @@
 			<div class="vm-actions-cell">Actions</div>
 		</div>
 		{#each vms as vm (vm.vmname)}
-			<VMRow {vm} {loading} {selectedVM} {showVMDetails} {toggleVM} {deleteVM} />
+			<VMRow
+				{vm}
+				{loading}
+				{selectedVM}
+				{rebootVM}
+				{showVMDetails}
+				{toggleVM}
+				{deleteVM}
+			/>
 		{/each}
 	</div>
 </div>

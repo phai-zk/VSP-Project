@@ -6,12 +6,14 @@
 	import Info from "./icon/Info.svelte";
 	import Trash from "./icon/Trash.svelte";
 	import Loading from "./icon/Loading.svelte";
+    import Refesh from "./icon/Refesh.svelte";
 
 	export let vm: VM;
 	export let selectedVM: VM | null;
 	export let showVMDetails = (vm: VM) => {};
 	export let toggleVM = (vm: VM) => {};
 	export let deleteVM = (vm: string) => {};
+	export let rebootVM = (vm: VM) => {};
 
 	export let loading: boolean;
 </script>
@@ -26,7 +28,7 @@
 	<div class="vm-ip-cell sm:flex hidden">{vm.ip}</div>
 	<div class="vm-status-cell">
 		<div class="status-indicator {vm.status}">
-			<div class="status-dot "></div>
+			<div class="status-dot"></div>
 			<span class="status-text sm:flex hidden">{vm.status}</span>
 		</div>
 	</div>
@@ -46,6 +48,14 @@
 			{:else}
 				<StartBTN w={16} h={16} />
 			{/if}
+		</button>
+		<button
+			class="action-btn reboot-btn"
+			on:click={() => rebootVM(vm)}
+			title="Reboot"
+			disabled={vm.status === "stop"}
+		>
+			<Refesh w={16} h={16} />
 		</button>
 		<button
 			class="action-btn info-btn"
