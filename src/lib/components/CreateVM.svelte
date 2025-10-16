@@ -23,6 +23,14 @@
 			alert("กรุณากรอกข้อมูลให้ครบถ้วน");
 			return false;
 		}
+		if (!isNaN(formData.ram) && Number(formData.ram) > 4096) {
+			alert("ระบุ Ram ได้ไม่เกิน 4096 MB");
+			return false;
+		}
+		if (!isNaN(formData.ram) && Number(formData.ram) < 0) {
+			alert("กรุณาระบุ Ram มากกว่า 0 MB");
+			return false;
+		}
 		return true;
 	}
 
@@ -33,11 +41,10 @@
 			if (v.port == Number(port)) {
 				alert("port " + port + " ไม่ว่าง");
 				isSamePort = true;
-				return ;
+				return;
 			}
 		});
-		if (isSamePort)
-			return false;
+		if (isSamePort) return false;
 		if (isNaN(port) || Number(port) < 9000) {
 			alert("กรุณากรอก port เป็นตัวเลขที่มากกว่า 9000");
 			return false;
@@ -79,11 +86,12 @@
 
 	// Functions
 	function createVM() {
-		if (!validInp()) return ;
+		if (!validInp()) return;
+		console.log("HI");
 
-		if (!validType()) return ;
+		if (!validType()) return;
 
-		if (!validName(formData.vmname)) return ;
+		if (!validName(formData.vmname)) return;
 
 		const newVM: VM = getNewVM();
 

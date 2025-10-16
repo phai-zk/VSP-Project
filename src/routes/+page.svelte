@@ -59,7 +59,7 @@
 	}
 
 	async function deleteVM(vmname: string) {
-		if (confirm("คุณต้องการลบ VM" + vmname + " หรือไม่?")) {
+		if (confirm("คุณต้องการลบ VM " + vmname + " หรือไม่?")) {
 			console.log("Remove ...");
 
 			let res = await delete_vm(vmname);
