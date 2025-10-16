@@ -75,7 +75,7 @@
 			distro: formData.distro,
 			vmname: formData.vmname,
 			name: formData.vmname.toLowerCase(),
-			ip: formData.ip,
+			ip: "174.138.19.115",
 			port: formData.port,
 			disk: formData.disk,
 			ram: formData.ram,
