@@ -7,7 +7,7 @@
 		stop_vm,
 		delete_vm,
 		create_vm,
-		reboot_vm
+		reboot_vm,
 	} from "$lib/VM/vmController";
 	import CreateVM from "$lib/components/CreateVM.svelte";
 	import VMRow from "$lib/components/VMItem.svelte";
@@ -41,7 +41,11 @@
 	async function toggleVM(vm: VM) {
 		toggleLoading(true);
 		let res;
-		if (vm.status === "running") res = await stop_vm(vm.vmname);
+		let status = vm.status;
+		vms = vms.map((v) =>
+			v.vmname === vm.vmname ? { ...v, status: "loading" } : v,
+		);
+		if (status === "running") res = await stop_vm(vm.vmname);
 		else res = await start_vm(vm.vmname);
 
 		if (!res.status) {
@@ -52,7 +56,7 @@
 
 		vms = vms.map((v) =>
 			v.vmname === vm.vmname
-				? { ...v, status: v.status === "running" ? "stop" : "running" }
+				? { ...v, status: status === "running" ? "stop" : "running" }
 				: v,
 		);
 		toggleLoading(false);
@@ -61,6 +65,10 @@
 	async function deleteVM(vmname: string) {
 		if (confirm("คุณต้องการลบ VM " + vmname + " หรือไม่?")) {
 			console.log("Remove ...");
+
+			vms = vms.map((v) =>
+				v.vmname === vmname ? { ...v, status: "loading" } : v,
+			);
 
 			let res = await delete_vm(vmname);
 			if (!res.status) {
